@@ -11,9 +11,9 @@ builds:
       - linux
       - windows
       - darwin
-# Custom flags templates.
-# Default is empty.
-    flags:
+# Custom ldflags templates.
+    # Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
+    ldflags:
       - -ldflags="-X cmd.VersionString={{.Env.RELEASE}}"
 archives:
   - replacements:
