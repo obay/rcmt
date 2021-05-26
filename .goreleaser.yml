@@ -14,7 +14,7 @@ builds:
 # Custom ldflags templates.
     # Default is `-s -w -X main.version={{.Version}} -X main.commit={{.Commit}} -X main.date={{.Date}} -X main.builtBy=goreleaser`.
     ldflags:
-      - -X 'github.com/obay/rcmt/cmd.VersionString={{.Env.RELEASE}}
+      - -X 'github.com/obay/rcmt/cmd.VersionString={{.Env.RELEASE}}'
 archives:
   - replacements:
       darwin: Darwin
