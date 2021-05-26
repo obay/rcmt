@@ -11,6 +11,10 @@ builds:
       - linux
       - windows
       - darwin
+# Custom flags templates.
+# Default is empty.
+flags:
+  -ldflags="-X main.VersionString={{.Env.GOPATHRELEASE}}"
 archives:
   - replacements:
       darwin: Darwin
