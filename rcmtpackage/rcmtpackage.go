@@ -87,7 +87,7 @@ func ConvergePackageState(hostDetails rcmthost.HostDetails, packageCurrentState,
 }
 
 func installPackageOnRemoteHost(session *ssh.Session, packageName string) {
-	commandLine := "apt install -y " + packageName
+	commandLine := "apt update && apt install -y " + packageName
 	rcmtssh.RunSimpleCommandOnRemoteHost(session, commandLine)
 }
 
