@@ -2,7 +2,7 @@
 
 ## Building & Releasing
 
-rcmt is using [GoReleaser](https://goreleaser.com) In order to build and release this code, simply run the follow commands to build and release.
+rcmt is using [GoReleaser](https://goreleaser.com) In order to build and release this code, simply run the following commands to build and release.
 
 rcmt uses [Homebrew](https://brew.sh) to publish the application. You will need your own homebrew-tap repo in your own GitHub account in order for [GoReleaser](https://goreleaser.com) to create the necessary files there as well.
 
@@ -24,7 +24,7 @@ You can install [Homebrew](https://brew.sh) using the following command:
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 ```
 
-Once [Homebrew](https://brew.sh), run the following commands to install the tool:
+Once [Homebrew](https://brew.sh) is installed, run the following commands to install the tool:
 
 ```bash
 brew tap obay/tap
@@ -47,7 +47,7 @@ HOST1=192.168.100.133
 HOST2=192.168.100.134
 ```
 
-Now, let's also assume that you have run `ssh-copy-id root@$HOST1` on both hosts and copied your public key so you now can login with no need for any passwords.
+Now, let's also assume that you have run `ssh-copy-id root@$HOST1` & `ssh-copy-id root@$HOST2` on both hosts and copied your public key so you now can login as root with no need for password prompts.
 
 ## Folder & File Structure
 
@@ -76,14 +76,14 @@ web1	192.168.100.133	root    	22
 web1	192.168.100.134	root    	22
 ```
 
-Now, let's add the resource files stubs.
+Now, let's add the resource file stubs.
 
 ### Adding a Package Resource File
 Run the following command to create a new resource file for a package
 ```bash
 rcmt resource package add php
 ```
-You should always check the details of the resource file to make sure they match what you want to do.
+You should always check the details of the generated resource file to make sure they match what you want to do.
 
 ### Create Template File
 rcmt looks at a folder called "templates" in the current working directory. If you don't have a templates directory created, make sure you create one and place the following file into it.
@@ -97,7 +97,7 @@ EOF
 ```
 
 ### Adding a File Resource File
-We will need to manage two files in order to see the right index page in this new Apache 2 server. We need to manage the default index.html (have it deleted) and we need to manage the index.php (have it copied).
+We will need to manage two files in order to see the right index page in those new Apache servers. We need to manage the default index.html (have it deleted/created) and we need to manage the index.php (have it copied).
 
 We will create 2 resource files and we will edit their settings to make sure they do what we want.
 
@@ -107,7 +107,7 @@ rcmt resource file add index.html
 # edit resource_file_index.html.rcmt and:
 # * Change filename value from "index.html" to "/var/www/html/index.html"
 # * Change exists value from "true" to "false"
-# In order to delete this file. If you don't delete this file, the php file will not sure as HTML will take precedence over PHP in default Apache settings
+# If you don't delete this file, the PHP file will not show as HTML will take precedence over PHP in default Apache settings
 ```
 
 ```bash
@@ -119,7 +119,7 @@ rcmt resource file add index.php
 ```
 
 ### Run Things in Order
-Now I mentioned at the begining that rcmt will execute those resources in lexicographic order, so we need to make sure the file names are ordered accordingly.
+Now I mentioned at the begining that rcmt will execute those resources in lexicographic order, so we need to make sure the file names are ordered accordingly. Not pretty, I know. But the "r" in rcmt stands for rudimentary 😬.
 
 ```bash
 mv resource_package_php.rcmt 1.resource_package_php.rcmt
@@ -135,13 +135,7 @@ rcmt do
 ```
 
 ### Verify Your Work
-If all went well, you should running the belwo commands:
-
-```bash
-curl -sv http://$HOST1
-```
-
-Should give you the following reply:
+If all went well, running `curl -sv http://$HOST1` should give you the following reply:
 
 ```bash
 *   Trying 192.168.100.133...
