@@ -90,7 +90,7 @@ func Do(hosts []rcmthost.HostDetails) (err error) {
 	for _, resource := range resources {
 		err = resource.Converge(hosts)
 		if err != nil {
-			break
+			return err
 		}
 	}
 	return

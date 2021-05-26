@@ -175,8 +175,8 @@ func ConvergeFileState(hostDetails rcmthost.HostDetails, fileCurrentState, fileD
 	helpers.Check(err)
 	/*********************************************************************************************/
 	// Fill MD5
-	if fileDesiredState.MD5 == "" {
-		fileDesiredState.MD5, err = getLocalFileMD5("./files/" + fileDesiredState.FileTemplateName)
+	if fileDesiredState.MD5 == "" && fileDesiredState.FileTemplateName != "" {
+		fileDesiredState.MD5, err = getLocalFileMD5("./templates/" + fileDesiredState.FileTemplateName)
 		if err != nil {
 			return
 		}
@@ -201,8 +201,8 @@ func ConvergeFileState(hostDetails rcmthost.HostDetails, fileCurrentState, fileD
 	} else if !fileCurrentState.Exists && fileDesiredState.Exists {
 		// File doesn't exist. create file
 		helpers.PrintWarningf("File \"" + fileDesiredState.FileName + "\" doesn't exist on " + hostDetails.Hostname + ". Creating file...")
-		err = rcmtssh.SCP(hostDetails, "./files/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
-		// err = copyFileToRemoteHost(hostDetails, "./files/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
+		err = rcmtssh.SCP(hostDetails, "./templates/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
+		// err = copyFileToRemoteHost(hostDetails, "./templates/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
 		if err != nil {
 			return
 		}
@@ -216,11 +216,11 @@ func ConvergeFileState(hostDetails rcmthost.HostDetails, fileCurrentState, fileD
 			return
 		}
 		helpers.PrintWarning("Done!")
-	} else if filesStatesAreDifferent(fileCurrentState, fileDesiredState) {
+	} else if filesStatesAreDifferent(fileCurrentState, fileDesiredState) && fileDesiredState.Exists {
 		if fileCurrentState.MD5 != fileDesiredState.MD5 {
 			// File exist. different content. change file
 			helpers.PrintWarningf("File exist but with different content. Copying \"" + fileDesiredState.FileName + "\"...")
-			err = rcmtssh.SCP(hostDetails, "./files/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
+			err = rcmtssh.SCP(hostDetails, "./templates/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
 			if err != nil {
 				return
 			}
@@ -370,11 +370,11 @@ func (r FileResource) Converge(hosts []rcmthost.HostDetails) (err error) {
 	for _, host := range hosts {
 		fileCurrentState, err := GetFileCurrentState(host, r.DesiredState.FileName)
 		if err != nil {
-			break
+			return err
 		}
 		err = ConvergeFileState(host, fileCurrentState, r.DesiredState)
 		if err != nil {
-			break
+			return err
 		}
 	}
 	return
