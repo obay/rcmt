@@ -14,7 +14,7 @@ builds:
 # Custom flags templates.
 # Default is empty.
     flags:
-      - -ldflags="-X main.VersionString={{.Env.RELEASE}}"
+      - -ldflags="-X cmd.VersionString={{.Env.RELEASE}}"
 archives:
   - replacements:
       darwin: Darwin
