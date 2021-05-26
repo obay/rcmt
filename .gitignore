@@ -15,3 +15,4 @@
 # vendor/
 *.rcmtdist/
 *.rcmt
+release.sh
