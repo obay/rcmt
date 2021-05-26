@@ -1,4 +1,4 @@
-# rcmt ()
+# rcmt (Rudimentary Configuration Management Tool)
 
 ## Building & Releasing
 
