@@ -31,7 +31,7 @@ brew tap obay/tap
 brew install rcmt
 ```
 
-Confirmt the tool is installed by running:
+Confirm the tool is installed by running:
 
 ```bash
 rcmt version
