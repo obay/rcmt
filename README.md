@@ -157,5 +157,5 @@ Hello, world!
 * Closing connection 0
 ```
 
-## How it looks like?
+## How it Looks Like?
 [![asciicast](https://asciinema.org/a/s9VJKkOFj4CpdlhOmjer2ldBb.svg)](https://asciinema.org/a/s9VJKkOFj4CpdlhOmjer2ldBb)
