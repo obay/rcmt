@@ -34,13 +34,6 @@ type FileState struct {
 	UsernameOfOwner  string
 	GroupNameOfOwner string
 	RelatedServices  []string
-	// FileBirth time.Time
-	// TimeOfLastDataModification time.Time
-	// TimeOfLastStatusChange     time.Time
-	// FileSizeInByte             int64
-	// UserIDOfOwner              int
-	// GroupIDOfOwner             int
-	// TimeOfLastAccess           time.Time
 }
 
 func getFileMD5(hostDetails rcmthost.HostDetails, destinationFile string) (md5hash string, err error) {
@@ -77,13 +70,6 @@ func SetFileState(hostDetails rcmthost.HostDetails) (err error) {
 	return
 }
 
-// func convertStringtoFileMode(fileModeString string) (fileMode fs.FileMode, err error) {
-// 	fileModeUint64, err := strconv.ParseUint(fileModeString, 10, 32)
-// 	helpers.Check(err)
-// 	fileMode = fs.FileMode(fileModeUint64)
-// 	return
-// }
-
 func GetFileCurrentState(hostDetails rcmthost.HostDetails, destinationFile string) (fileStat FileState, err error) {
 	_, session, err := rcmtssh.ConnectToHost(hostDetails.Username, hostDetails.Hostname, hostDetails.Port)
 	if err != nil {
@@ -111,41 +97,15 @@ func GetFileCurrentState(hostDetails rcmthost.HostDetails, destinationFile strin
 	statLines := strings.Split(stdout, ":")
 	for _, statLine := range statLines {
 		kv := strings.Split(statLine, "=")
-		// FileBirth=0
-		// FileName=/root/filex.txt
-		// FileSizeInByte=6
-		// FileType=regular file
-		// GroupIDOfOwner=0
-		// GroupNameOfOwner=root
-		// Mode=644
-		// TimeOfLastAccess=1621791034
-		// TimeOfLastDataModification=1621791034
-		// TimeOfLastStatusChange=1621792920
-		// UserIDOfOwner=0
-		// UsernameOfOwner=root
 		switch kv[0] {
-		// case "FileBirth":
-		// 	fileStat.FileBirth = helpers.GetEpochTime(kv[1])
 		case "FileName":
 			fileStat.FileName = kv[1]
-		// case "FileSizeInByte":
-		// 	fileStat.FileSizeInByte = helpers.StringToInt64(kv[1])
 		case "FileType":
 			fileStat.IsDirectory = kv[1] == "directory"
-		// case "GroupIDOfOwner":
-		// 	fileStat.GroupIDOfOwner = helpers.StringToInt(kv[1])
 		case "GroupNameOfOwner":
 			fileStat.GroupNameOfOwner = kv[1]
 		case "Mode":
 			fileStat.Mode = kv[1]
-		// case "TimeOfLastAccess":
-		// 	fileStat.TimeOfLastAccess = helpers.GetEpochTime(kv[1])
-		// case "TimeOfLastDataModification":
-		// 	fileStat.TimeOfLastDataModification = helpers.GetEpochTime(kv[1])
-		// case "TimeOfLastStatusChange":
-		// 	fileStat.TimeOfLastStatusChange = helpers.GetEpochTime(kv[1])
-		// case "UserIDOfOwner":
-		// 	fileStat.UserIDOfOwner = helpers.StringToInt(kv[1])
 		case "UsernameOfOwner":
 			fileStat.UsernameOfOwner = strings.TrimSpace(kv[1])
 		}
@@ -202,7 +162,6 @@ func ConvergeFileState(hostDetails rcmthost.HostDetails, fileCurrentState, fileD
 		// File doesn't exist. create file
 		helpers.PrintWarningf("File \"" + fileDesiredState.FileName + "\" doesn't exist on " + hostDetails.Hostname + ". Creating file...")
 		err = rcmtssh.SCP(hostDetails, "./templates/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
-		// err = copyFileToRemoteHost(hostDetails, "./templates/"+fileDesiredState.FileTemplateName, fileDesiredState.FileName, fileDesiredState.Mode)
 		if err != nil {
 			return
 		}
@@ -271,20 +230,6 @@ func deleteFileFromRemoteHost(hostDetails rcmthost.HostDetails, fileName string)
 	session.Close()
 	return
 }
-
-// func copyFileToRemoteHost(hostDetails rcmthost.HostDetails, sourceFile string, destinationFile string, destinationFileMode string) (err error) {
-// 	_, session, err := rcmtssh.ConnectToHost(hostDetails.Username, hostDetails.Hostname, hostDetails.Port)
-// 	if err != nil {
-// 		return
-// 	}
-// 	err = scp.CopyPath(sourceFile, destinationFile, session)
-// 	if err != nil {
-// 		session.Close()
-// 		return
-// 	}
-// 	err = setFileModeOnRemoteHost(hostDetails, destinationFileMode, destinationFile)
-// 	return
-// }
 
 func setFileModeOnRemoteHost(hostDetails rcmthost.HostDetails, destinationFile string, fileMode string) (err error) {
 	_, session, err := rcmtssh.ConnectToHost(hostDetails.Username, hostDetails.Hostname, hostDetails.Port)
