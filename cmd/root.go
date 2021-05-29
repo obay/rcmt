@@ -6,7 +6,6 @@ import (
 
 	"github.com/spf13/cobra"
 
-	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/viper"
 )
 
@@ -43,18 +42,6 @@ func init() {
 
 // initConfig reads in config file and ENV variables if set.
 func initConfig() {
-	if cfgFile != "" {
-		// Use config file from the flag.
-		viper.SetConfigFile(cfgFile)
-	} else {
-		// Find home directory.
-		home, err := homedir.Dir()
-		cobra.CheckErr(err)
-
-		// Search config in home directory with name ".rcmt" (without extension).
-		viper.AddConfigPath(home)
-		viper.SetConfigName(".rcmt")
-	}
 
 	viper.AutomaticEnv() // read in environment variables that match
 
