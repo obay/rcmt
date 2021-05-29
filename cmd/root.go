@@ -1,7 +1,11 @@
 package cmd
 
 import (
+	"fmt"
+
+	"github.com/obay/rcmt/helpers"
 	"github.com/spf13/cobra"
+	"github.com/tcnksm/go-latest"
 
 	"github.com/spf13/viper"
 )
@@ -17,6 +21,19 @@ of rcmt as Ansible using Golang`,
 
 func Execute() {
 	cobra.CheckErr(rootCmd.Execute())
+	checkLatestVersion()
+}
+
+func checkLatestVersion() {
+	githubTag := &latest.GithubTag{
+		Owner:             "obay",
+		Repository:        "rcmt",
+		FixVersionStrFunc: latest.DeleteFrontV(),
+	}
+	res, _ := latest.Check(githubTag, VersionString)
+	if res.Outdated {
+		helpers.PrintWarning(fmt.Sprintf("You are running rcmt "+VersionString+" which is not the latest, you should upgrade to v%s", res.Current))
+	}
 }
 
 func init() {
