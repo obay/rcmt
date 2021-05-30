@@ -6,8 +6,8 @@ on:
     tags:
       - '*'
 
-permissions:
-  contents: write
+# permissions:
+#   contents: write
 
 jobs:
   goreleaser:
@@ -33,5 +33,6 @@ jobs:
           args: release --rm-dist
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE: v0.21.0
           # Your GoReleaser Pro key, if you are using the 'goreleaser-pro' distribution
           # GORELEASER_KEY: ${{ secrets.GORELEASER_KEY }}
