@@ -27,8 +27,7 @@ You can install [Homebrew](https://brew.sh) using the following command:
 Once [Homebrew](https://brew.sh) is installed, run the following commands to install the tool:
 
 ```bash
-brew tap obay/tap
-brew install rcmt
+brew tap obay/tap && brew install rcmt
 ```
 
 Confirm the tool is installed by running:
